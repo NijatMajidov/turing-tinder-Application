@@ -1,9 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <title>Tinder App Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f0f2f5;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, textarea {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to Tinder App</h1>
+<h1>Tinder App Frontend</h1>
+
+<div class="section">
+    <h2>Users</h2>
+    <button onclick="loadUsers()">Load Users</button>
+    <div id="userList"></div>
+</div>
+
+<div class="section">
+    <h2>Likes</h2>
+    <button onclick="loadLikes()">Load Likes</button>
+    <div id="likeList"></div>
+</div>
+
+<div class="section">
+    <h2>Messages</h2>
+    <button onclick="loadMessages()">Load Messages</button>
+    <div id="messageList"></div>
+</div>
+
+<div class="section">
+    <h2>Add User</h2>
+    <div class="form-group">
+        <input type="text" id="username" placeholder="Username">
+        <input type="text" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="addUser()">Add User</button>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Send Message</h2>
+    <div class="form-group">
+        <input type="number" id="senderId" placeholder="Sender ID">
+        <input type="number" id="receiverId" placeholder="Receiver ID">
+        <textarea id="messageText" placeholder="Message" rows="3"></textarea>
+        <button onclick="sendMessage()">Send Message</button>
+    </div>
+</div>
+
+<script>
+    const apiUrl = 'http://localhost:8082';
+
+    function loadUsers() {
+        fetch(apiUrl + '/users')
+            .then(res => res.json())
+            .then(users => {
+                const container = document.getElementById('userList');
+                container.innerHTML = '';
+                users.forEach(user => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.textContent = `Username: ${user.username}, Email: ${user.email}`;
+                    container.appendChild(div);
+                });
+            })
+            .catch(() => alert('Failed to load users'));
+    }
+
+    function loadLikes() {
+        fetch(apiUrl + '/likes')
+            .then(res => res.json())
+            .then(likes => {
+                const container = document.getElementById('likeList');
+                container.innerHTML = '';
+                likes.forEach(like => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.textContent = `UserID: ${like.userId}, LikedUserID: ${like.likedUserId}, Liked: ${like.liked}`;
+                    container.appendChild(div);
+                });
+            })
+            .catch(() => alert('Failed to load likes'));
+    }
+
+    function loadMessages() {
+        fetch(apiUrl + '/messages')
+            .then(res => res.json())
+            .then(messages => {
+                const container = document.getElementById('messageList');
+                container.innerHTML = '';
+                messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.textContent = `From: ${msg.senderId} To: ${msg.receiverId} Message: ${msg.message} Time: ${msg.timestamp}`;
+                    container.appendChild(div);
+                });
+            })
+            .catch(() => alert('Failed to load messages'));
+    }
+
+    function addUser() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const data = { username, email, password };
+
+        fetch(apiUrl + '/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert('User added successfully');
+                    loadUsers();
+                } else {
+                    alert('Failed to add user');
+                }
+            })
+            .catch(() => alert('Failed to add user'));
+    }
+
+    function sendMessage() {
+        const senderId = document.getElementById('senderId').value;
+        const receiverId = document.getElementById('receiverId').value;
+        const messageText = document.getElementById('messageText').value;
+
+        const data = {
+            senderId: Number(senderId),
+            receiverId: Number(receiverId),
+            message: messageText
+        };
+
+        fetch(apiUrl + '/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert('Message sent successfully');
+                    loadMessages();
+                } else {
+                    alert('Failed to send message');
+                }
+            })
+            .catch(() => alert('Failed to send message'));
+    }
+</script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package az.turing.newapp.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +18,15 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Liker user must not be null")
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "liker_id", nullable = false)
+    private User liker;
 
+    @NotNull(message = "Liked user must not be null")
     @ManyToOne
-    private Profile profile;
+    @JoinColumn(name = "liked_id", nullable = false)
+    private User liked;
 
-    private boolean liked;
+    private boolean isLiked;
 }

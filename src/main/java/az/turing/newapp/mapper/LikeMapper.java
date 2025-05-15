@@ -1,7 +1,10 @@
 package az.turing.newapp.mapper;
 
 import az.turing.newapp.entity.Like;
-import az.turing.newapp.model.request.LikeDTO;
+import az.turing.newapp.model.request.LikeRequestDTO;
+import az.turing.newapp.model.response.LikeResponseDTO;
+import org.mapstruct.Mapper;
 
-public interface LikeMapper extends EntityMapper<Like, LikeDTO> {
+@Mapper(componentModel = "spring")
+public interface LikeMapper extends EntityMapper<Like, LikeRequestDTO, LikeResponseDTO> {
 }
