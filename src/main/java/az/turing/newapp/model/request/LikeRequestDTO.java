@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class LikeRequestDTO {
     @NotNull(message = "Liker ID must not be null")
-    private User liker;
+    private Long liker;
 
     @NotNull(message = "Liked ID must not be null")
-    private User liked;
+    private Long liked;
 
     private boolean isLiked;
 }

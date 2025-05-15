@@ -37,5 +37,8 @@ public class User {
     private List<Message> receivedMessages;
 
     @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
-    private List<Like> likes;
+    private List<Like> liker;
+
+    @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL)
+    private List<Like> likedByOthers;
 }

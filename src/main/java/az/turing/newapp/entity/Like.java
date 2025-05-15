@@ -29,4 +29,8 @@ public class Like {
     private User liked;
 
     private boolean isLiked;
+
+    public boolean getIsLiked() {
+        return isLiked;
+    }
 }
